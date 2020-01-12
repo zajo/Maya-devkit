@@ -11,7 +11,7 @@ project('Maya-devkit','cpp')
 compiler_id = meson.get_compiler('cpp').get_id()
 
 maya_version = get_option('maya_version')
-defines = [ '-DMAYA_VERSION="'+maya_version+'"' ]
+defines = [ '-DMAYA_VERSION='+maya_version ]
 compile_args = [ ]
 
 if build_machine.system()=='darwin'
@@ -50,14 +50,19 @@ else
 	error('System not supported yet')
 endif
 
+qt_plugins_dir = 'plugins'
+if maya_version.to_int()<2020
+	qt_plugins_dir = 'qt-plugins'
+endif
+
 if build_machine.system()=='darwin'
 	test_environment = [
 		'DYLD_FALLBACK_LIBRARY_PATH='+join_paths(location,'Maya.app/Contents/MacOS'),
 		'DYLD_FALLBACK_FRAMEWORK_PATH='+join_paths(location,'Maya.app/Contents/Frameworks'),
-		'QT_PLUGIN_PATH='+join_paths(location,'qt-plugins')
+		'QT_PLUGIN_PATH='+join_paths(location,qt_plugins_dir)
 	]
 else
 	test_environment = [
-		'QT_PLUGIN_PATH='+join_paths(location,'qt-plugins')
+		'QT_PLUGIN_PATH='+join_paths(location,qt_plugins_dir)
 	]
 endif
