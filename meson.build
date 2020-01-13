@@ -23,7 +23,7 @@ elif build_machine.system()=='windows'
 	endif
 	location = 'C:/Program Files/Autodesk/maya'+maya_version
 	defines += [ '-D_BOOL' ]
-elif
+else
 	error('Platform not supported (yet)')
 endif
 defines += [ '-DMAYA_LOCATION="'+location+'"' ]
@@ -61,8 +61,11 @@ if build_machine.system()=='darwin'
 		'DYLD_FALLBACK_FRAMEWORK_PATH='+join_paths(location,'Maya.app/Contents/Frameworks'),
 		'QT_PLUGIN_PATH='+join_paths(location,qt_plugins_dir)
 	]
-else
+elif build_machine.system()=='windows'
 	test_environment = [
-		'QT_PLUGIN_PATH='+join_paths(location,qt_plugins_dir)
+		'QT_PLUGIN_PATH='+join_paths(location,qt_plugins_dir),
+		'PATH=%PATH%;'+join_paths(location,'bin')
 	]
+else
+	error('Platform not supported (yet)')
 endif
